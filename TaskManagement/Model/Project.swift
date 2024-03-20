@@ -14,7 +14,8 @@ class Project {
     var name: String
     var startDate: Date
     var endDate: Date
-    @Relationship(deleteRule: .cascade) var  tasks: [Task]
+    @Relationship(deleteRule: .cascade) 
+    var  tasks: [Task]
     
     init(projectDescription: String = "", name: String = "", startDate: Date = .now, endDate: Date = .now, tasks: [Task] = []) {
         self.projectDescription = projectDescription

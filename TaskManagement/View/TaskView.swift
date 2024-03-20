@@ -70,13 +70,10 @@ private extension TaskView {
     
     func saveTaskState() {
         if exhibitionMode == .create {
-            let task = Task(taskDescription: selectedTask.taskDescription,
-                            comments: [],
-                            status: selectedTask.status)
-            
-            modelContext.insert(task)
-            task.comments = selectedTask.comments
-            project.tasks.append(task)
+            if selectedTask.comments.isEmpty {
+                modelContext.insert(selectedTask)
+            }
+            project.tasks.append(selectedTask)
         }
         dismiss()
     }

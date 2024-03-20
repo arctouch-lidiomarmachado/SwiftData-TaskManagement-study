@@ -73,7 +73,9 @@ private extension ProjectView {
     }
     
     func addNewProject() {
-        modelContext.insert(project)
+        if project.tasks.isEmpty {
+            modelContext.insert(project)
+        }
         dismiss()
     }
 }
