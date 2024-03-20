@@ -82,3 +82,33 @@ private extension TaskView {
         dismiss()
     }
 }
+
+#Preview {
+    let modelConfiguration = ModelConfiguration(isStoredInMemoryOnly: true)
+    let modelContainer = try! ModelContainer(for: Project.self, configurations: modelConfiguration)
+    let modelContext = ModelContext(modelContainer)
+    
+    let project = Project(projectDescription: "Project 1", 
+                          name: "Project 1 description",
+                          startDate: Date(),
+                          endDate: Date())
+    
+    let task = Task(taskDescription: "A simple task", 
+                    comments: [],
+                    status: "open")
+    
+    let comment = Comment(commentDescription: "A simple comment")
+    let comment2 = Comment(commentDescription: "Another comment")
+    
+    modelContext.insert(comment)
+    modelContext.insert(comment2)
+    
+    task.comments.append(comment)
+    task.comments.append(comment2)
+    
+    project.tasks.append(task)
+    
+    return TaskView(project: project, 
+                    task: task,
+                    exhibitionMode: .update).modelContainer(modelContainer)
+}

@@ -39,3 +39,20 @@ private extension CommentView {
         dismiss()
     }
 }
+
+#Preview {
+    let modelConfiguration = ModelConfiguration(isStoredInMemoryOnly: true)
+    let modelContainer = try! ModelContainer(for: Project.self, configurations: modelConfiguration)
+    let modelContext = ModelContext(modelContainer)
+    
+    let task = Task(taskDescription: "A simple task",
+                    comments: [],
+                    status: "open")
+    
+    let comment = Comment(commentDescription: "A simple comment")
+    modelContext.insert(comment)
+    task.comments.append(comment)
+    
+    return CommentView(task: task, selectedComment: comment, exhibitionMode: .update).modelContainer(modelContainer)
+}
+

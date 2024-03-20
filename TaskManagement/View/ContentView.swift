@@ -61,5 +61,22 @@ private extension ContentView {
 }
 
 #Preview {
-    ContentView()
+    let modelConfiguration = ModelConfiguration(isStoredInMemoryOnly: true)
+    let modelContainer = try! ModelContainer(for: Project.self, configurations: modelConfiguration)
+    let modelContext = ModelContext(modelContainer)
+    
+    let project = Project(projectDescription: "Project 1", 
+                          name: "Project 1 description",
+                          startDate: Date(),
+                          endDate: Date())
+    
+    let project2 = Project(projectDescription: "Project 2", 
+                           name: "Project 2 description",
+                           startDate: Date(),
+                           endDate: Date())
+    
+    modelContext.insert(project2)
+    modelContext.insert(project)
+    
+    return ContentView().modelContainer(modelContainer)
 }

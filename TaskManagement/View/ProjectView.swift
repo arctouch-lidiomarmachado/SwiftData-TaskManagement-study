@@ -88,3 +88,23 @@ private extension ProjectView {
         dismiss()
     }
 }
+
+#Preview {
+    let modelConfiguration = ModelConfiguration(isStoredInMemoryOnly: true)
+    let modelContainer = try! ModelContainer(for: Project.self, configurations: modelConfiguration)
+    let modelContext = ModelContext(modelContainer)
+    
+    let project = Project(projectDescription: "Project 1", 
+                          name: "Project 1 description",
+                          startDate: Date(),
+                          endDate: Date())
+    
+    let task = Task(taskDescription: "A simple task", 
+                    comments: [],
+                    status: "open")
+    
+    modelContext.insert(task)
+    project.tasks.append(task)
+    
+    return ProjectView(project: project, exhibitionMode: .create).modelContainer(modelContainer)
+}
