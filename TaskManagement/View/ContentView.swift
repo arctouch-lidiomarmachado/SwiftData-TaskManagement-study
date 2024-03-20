@@ -39,12 +39,18 @@ struct ContentView: View {
     }
 }
 
-//MARK: private functions
 private extension ContentView {
     func deleteProject(indexSet: IndexSet) {
         for index in indexSet {
             let project = projects[index]
-            modelContext.delete(project)
+            
+            do {
+                modelContext.delete(project)
+                try modelContext.save()
+            } catch {
+                print(error)
+            }
+            
         }
     }
     

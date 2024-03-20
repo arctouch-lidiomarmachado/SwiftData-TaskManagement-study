@@ -11,7 +11,7 @@ import SwiftData
 struct TaskView: View {
     //MARK: Bindable property wrappers.
     @Bindable var project: Project
-    @Bindable var selectedTask: Task
+    @Bindable var task: Task
     
     //MARK: Environment property wrappers.
     @Environment(\.modelContext) var modelContext: ModelContext
@@ -22,13 +22,13 @@ struct TaskView: View {
     var body: some View {
         VStack {
             Form {
-                TextField("Description", text: $selectedTask.taskDescription)
-                TextField("Status", text: $selectedTask.status)
+                TextField("Description", text: $task.taskDescription)
+                TextField("Status", text: $task.status)
                 
                 Section("Comments") {
-                    if !selectedTask.comments.isEmpty {
-                        ForEach(selectedTask.comments) { comment in
-                            let commentView = CommentView(task: selectedTask,
+                    if !task.comments.isEmpty {
+                        ForEach(task.comments) { comment in
+                            let commentView = CommentView(task: task,
                                                           selectedComment: comment,
                                                           exhibitionMode: .update)
                             
@@ -50,7 +50,7 @@ struct TaskView: View {
 
 private extension TaskView {
     func addCommentNavigationLink() -> some View {
-        let commentView = CommentView(task: selectedTask,
+        let commentView = CommentView(task: task,
                                       selectedComment: Comment(),
                                       exhibitionMode: .create)
         
@@ -62,18 +62,22 @@ private extension TaskView {
     
     func deleteComment(indexSet: IndexSet) {
         for index in indexSet {
-            let comment = selectedTask.comments[index]
-            selectedTask.comments.remove(at: index)
-            modelContext.delete(comment)
+            let comment = task.comments[index]
+            task.comments.remove(at: index)
+            do {
+                modelContext.delete(comment)
+                try modelContext.save()
+            } catch {
+                print(error)
+            }
+            
         }
     }
     
     func saveTaskState() {
         if exhibitionMode == .create {
-            if selectedTask.comments.isEmpty {
-                modelContext.insert(selectedTask)
-            }
-            project.tasks.append(selectedTask)
+            modelContext.insert(task)
+            project.tasks.append(task)
         }
         dismiss()
     }

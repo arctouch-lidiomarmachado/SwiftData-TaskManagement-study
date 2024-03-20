@@ -11,8 +11,7 @@ import SwiftData
 @Model
 class Task: Identifiable {
     let id = UUID()
-    var taskDescription: String
-    @Relationship(deleteRule: .cascade) 
+    var taskDescription: String 
     var comments: [Comment]
     var status: String
     

@@ -28,7 +28,7 @@ struct ProjectView: View {
                     if !project.tasks.isEmpty {
                         ForEach(project.tasks) { task in
                             NavigationLink(destination: TaskView(project: project,
-                                                                 selectedTask: task,
+                                                                 task: task,
                                                                  exhibitionMode: .update)) {
                                 Text(task.taskDescription)
                             }
@@ -51,12 +51,18 @@ private extension ProjectView {
         for index in indexSet {
             let task = project.tasks[index]
             project.tasks.remove(at: index)
-            modelContext.delete(task)
+            
+            do {
+                modelContext.delete(task)
+                try modelContext.save()
+            } catch {
+                print(error)
+            }
         }
     }
     
     func addTaskNavigationLink() -> some View {
-        let taskView = TaskView(project: project, selectedTask: Task(), exhibitionMode: .create)
+        let taskView = TaskView(project: project, task: Task(), exhibitionMode: .create)
         return NavigationLink(destination: taskView) {
             Text("Add task")
         }
@@ -73,8 +79,11 @@ private extension ProjectView {
     }
     
     func addNewProject() {
-        if project.tasks.isEmpty {
+        do {
             modelContext.insert(project)
+            try modelContext.save()
+        } catch {
+            print(error)
         }
         dismiss()
     }
