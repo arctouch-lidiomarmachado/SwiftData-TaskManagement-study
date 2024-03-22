@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Task: Identifiable {
+class Task {
     let id = UUID()
     var taskDescription: String 
     var comments: [Comment]
